@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .grid-container {
+        display: grid;
+        grid-gap: 50px;
+        grid-template-columns: auto auto auto;
+        background-color: #c7cf7b;
+        padding: 10px;
+    }
+  
+  .grid-item {
+        padding: 20px;
+        font-size: 30px;
+        text-align: center;
+    }
+    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Document</title>
+    
+    <meta name="viewport" content="initial-scale=1">
+    <link rel="stylesheet2" href="login.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+</head>
+
+<body style="background-color:#0465a1;" id="body_branch">
+
+    <h1 style="color: midnightblue; font-family: Verdana; font-size: 60px;" >EmployeeSoft</h1>
+
+
+    <div class="grid-container" id = "login">
+        <div class="grid-item"></div>
+        <div class="grid-item">
+            <p><br>Associate Login:</p>
+        </div>
+        <div class="grid-item"></div>  
+        <div class="grid-item"></div>
+        <div  class="grid-item">
+            <label for="usr" width:25px;>Username:</label>
+            <input type="text" id="usr" width="150px">
+            <br><br>
+            <label for="pwd" width="200px">Password:</label>
+            <input type="password" id="pwd" width="200px" height=2  00px>
+            <br>
+            <a style = "font-size: 14px;">Forgot Username?</a> <a style = "font-size: 14px;">Forgot Password?</a><br><a style = "font-size: 13px;">New User</a>
+        </div>
+        <div class="grid-item"></div>  
+        <div class="grid-item"></div>
+        <div class="grid-item"><button style="font-size: 23px;" onclick="login()">
+            Submit
+        </button></div>
+        <div class="grid-item"></div>  
+    </div>
+
+    <img src=".\lowerbanner.png" width = "100%" >
+</body>
+<script>
+    async function loadRequests() {
+            const url = "http://localhost:7000/requests";
+            const httpResponse = await fetch(url);
+            const body = await httpResponse.json();
+    
+            // tableElement.innerHTML = "";
+            //let requestx = document.createElement('tr');
+    
+            console.log(body);
+            // console.log(body[0].amountRequested);
+            // console.log(body[1].amountRequested);
+            // console.log(body[2].amountRequested);
+            console.log(body[0]);
+    
+            for(i=0; i<body.length; i++){
+              let tableElement = document.getElementById("myTBody");
+              row  = tableElement.insertRow();
+              cell1 = row.insertCell(); // formid
+              cell2 = row.insertCell(); // request_status
+              cell3 = row.insertCell(); // employee id
+              cell4 = row.insertCell(); // employee name
+              cell5 = row.insertCell(); // employee dept
+              cell6 = row.insertCell(); // super
+              cell7 = row.insertCell(); // reason for request
+              cell8 = row.insertCell(); // requested amount
+              cell9 = row.insertCell(); // time missed
+              cell10 = row.insertCell(); // pre approved
+              cell11 = row.insertCell(); // event date
+              cell12 = row.insertCell(); // event location
+              cell13 = row.insertCell(); // dateEscalated
+              cell14 = row.insertCell(); // grading format
+              cell15 = row.insertCell(); // eventAttachments
+              cell16 = row.insertCell(); // eventDescription
+              cell17 = row.insertCell(); // eventType
+              // for(j=0; j<body[i].length; j++){
+                // console.log(body[i].amountRequested)
+            // for (key var in body) {
+    
+            // let amountRequested = document.createElement('td');
+            // amountRequested.innerHTML = body[i].amountRequested;
+            // requestx.appendChild(amountRequested);
+            // console.log(amountRequested);
+    
+            //let dateEscalated = document.createElement('td');
+            //let cell = rquestx.insertCell();
+            //let text = document.createTextNode(element[key]);
+            cell1.innerHTML = body[i].formId;
+            cell2.innerHTML = body[i].requestStatus;
+            cell3.innerHTML = body[i].requesterId;
+            cell4.innerHTML = body[i].requesterName;
+            cell5.innerHTML = body[i].requesterDept;
+            cell6.innerHTML = body[i].requesterSuper;
+            cell7.innerHTML = body[i].reasonForRequest;
+            cell8.innerHTML = body[i].amountRequested;
+            cell9.innerHTML = body[i].timeMissedFromWork;
+            cell10.innerHTML = body[i].preApproved;
+            cell11.innerHTML = body[i].eventDate;
+    
+            let ms = Date.now();    
+      
+            console.log(body[i].eventDate-ms);
+            if ((body[i].eventDate)-ms<= 86400000){                                      
+              urgentMsg = document.createTextNode("-URGENT");
+              cell11.appendChild(urgentMsg);
+            } 
+    
+            cell12.innerHTML = body[i].eventLocation;
+            cell13.innerHTML = body[i].dateEscalated;
+            cell14.innerHTML = body[i].gradingFormat;
+            cell15.innerHTML = body[i].eventAttachments;
+            cell16.innerHTML = body[i].eventDescription;
+            cell17.innerHTML = body[i].eventType;
+    
+            row2 = tableElement.insertRow();
+            button = document.createElement('button');
+            button.innerHTML = "Approve";
+    
+            const data = {
+              formId : body[i].formId,
+              requestStatus : 5,
+              requesterId : body[i].requesterId,
+              requesterName : body[i].requesterName,
+              requesterDept : body[i].requesterDept,
+              requesterSuper : body[i].requesterSuper,
+              reasonForRequest : body[i].reasonForRequest,
+              amountRequested : body[i].amountRequested,
+              timeMissedFromWork : body[i].timeMissedFromWork,
+              preApproved : body[i].preApproved,
+              eventDate : body[i].eventDate,
+              eventLocation : body[i].eventLocation,
+              dateEscalated : body[i].dateEscalated,
+              gradingFormat : body[i].gradingFormat,
+             eventAttachments : body[i].eventAttachments,
+            eventDescription : body[i].eventDescription,
+            eventType : body[i].eventType
+            }
+    
+            const url = "http://localhost:7000/requests/" + body[i].formId;
+            console.log(data);
+            console.log(url);
+            button.onclick =  async function(data, url) {
+
+              const httpResponse = await fetch(url, {
+                headers: {
+                "Access-Control-Allow-Method": "PUT"
+                },
+                mode:"cors",
+                credentials: "include",
+                method: "PUT",
+                body: JSON.stringify(data)
+            });
+            };
+            row2.appendChild(button);
+            }
+          }
+
+      async function submitReimbursementForm() {
+        
+              requesterIdValue = document.getElementById("requesterIdInput").value;
+              // document.getElementById("requesterIdInput").value="";
+    
+              requesterNameValue = document.getElementById("requesterNameInput").value;
+              // document.getElementById("requesterNameInput").value="";
+    
+              requesterDeptValue = document.getElementById("requesterDeptInput").value;
+              // document.getElementById("requesterDeptInput").value="";
+    
+              requesterSuperValue = document.getElementById("requesterSuperInput").value;
+              // document.getElementById("requesterSuperInput").value="";
+    
+              reasonForRequestValue = document.getElementById("reasonForRequestInput").value;
+              // document.getElementById("reasonForRequestInput").value="";
+    
+              amountRequestedValue = document.getElementById("amountRequestedInput").value;
+              // document.getElementById("amountRequestedInput").value="";
+    
+              timeMissedFromWorkValue = document.getElementById("timeMissedFromWorkInput").value;
+              // document.getElementById("timeMissedFromWorkInput").value="";
+    
+              preApprovedValue = document.getElementById("preApprovedInput").value;
+              // document.getElementById("preApprovedInput").value="";
+    
+              eventDateValue = document.getElementById("eventDateInput").value;
+              // document.getElementById("eventDateInput").value="";
+    
+              eventLocationValue = document.getElementById("eventLocationInput").value;
+              // document.getElementById("eventLocationInput").value="";
+    
+              dateEscalatedValue = document.getElementById("dateEscalatedInput").value;
+              // document.getElementById("dateEscalatedInput").value="";
+    
+              gradingFormatValue = document.getElementById("gradingFormatInput").value;
+              // document.getElementById("gradingFormatInput").value="";
+    
+              eventAttachmentsValue = document.getElementById("eventAttachmentsInput").value;
+              // document.getElementById("eventAttachmentsInput").value="";
+    
+              eventDescriptionValue = document.getElementById("eventDescriptionInput").value;
+              // document.getElementById("eventDescriptionInput").value="";
+    
+              eventTypeValue = document.getElementById("eventTypeInput").value;
+              // document.getElementById("eventTypeInput").value="";
+    
+              if (preApprovedValue == 'true') requestStatusValue = 8;
+              else requestStatusValue = 1;
+              const data = {
+                requesterId : requesterIdValue,
+                requesterName : requesterNameValue,
+                requesterDept : requesterDeptValue,
+                requesterSuper : requesterSuperValue,
+                reasonForRequest : reasonForRequestValue,
+                amountRequested : amountRequestedValue,
+                timeMissedFromWork : timeMissedFromWorkValue,
+                preApproved : preApprovedValue,
+                eventDate : eventDateValue,
+                eventLocation : eventLocationValue,
+                requestStatus : requestStatusValue,
+                dateEscalated : dateEscalatedValue,
+                gradingFormatId : gradingFormatValue,
+                eventAttachments : eventAttachmentsValue,
+                eventDescription : eventDescriptionValue,
+                eventType : eventTypeValue
+              }
+              console.log(JSON.stringify(data));
+
+              const url = "http://localhost:7000/requests/";
+    
+              const httpResponse = await fetch(url, {
+                headers: {
+                  // "Access-Control-Allow-Origin":"*"
+                },
+                method: "POST",
+                // mode: "cors",
+                body: JSON.stringify(data)
+            });
+    
+            const body = await httpResponse.json();
+    
+            console.log(body);
+
+      }
+
+      
+    async function login() {
+        /* 
+        Check credentials against usernames and password in DB
+        Can William login?
+        */
+        username = document.querySelector('input').value;
+        password = document.querySelector('input').value;
+
+        const headers = new Headers();
+        headers.set('Authorization', 'Basic ' + btoa(username + ":" + password));
+        const url1 = `http://localhost:7000/login/`;
+        response = await fetch(url1, {headers: headers});
+        
+        if (response.status == 200) {
+          url = `http://localhost:7000/employees/1`;
+          response1 = await fetch(url, {headers: headers});
+          const body = await response1.json();
+          localStorage.setItem('username', username);
+          localStorage.getItem(username);
+            //window.location.replace("file:///K:/Revature/projec1/dashboard/index.html");
+
+            setTimeout(function() {
+                window.location.href = "file:///K:/Revature/projec1/dashboard/index.html";
+            });
+             
+            
+        }
+
+    }
+    async function login_success(){
+        document.location="../../projec1/dashboard/index.html";
+        //  OLD plan of using the same page by clearing elements from DOM
+        // console.log("wya");
+        var parent = document.getElementById("body_branch");
+        parent.style.display='none';
+        var child = document.getElementById('login')
+        parent.removeChild(child);   
+    }
+
+</script>
+</html>

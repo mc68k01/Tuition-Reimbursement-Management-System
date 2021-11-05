@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "..\\..\\VSC"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "..\\..\\AngularBasics"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "dashboard"
+	}
+}

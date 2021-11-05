@@ -1,0 +1,63 @@
+Reimbursement rates:
+	University Courses 80%, 
+	Seminars 60%, 
+	Certi Prep Classes 75%, 
+	Cert 100%, 
+	Technical Training 90%, 
+	Other 30%
+
+Information collected by form:
+	- basic employee information
+	- date, time, location, description, cost of event
+	- grading format, type of event, passing grade if known
+	- work-related justification
+
+	Optionally:
+	- event-related attachments pdf, png, jpeg, txt, or doc file type
+	attachments of approvals already provided (.msg file type)
+	- type of previous approval
+	- work time to be missed
+	- projected reimbursement is read-only
+
+
+Grading format:
+	- Come from Reference table
+	- particular formats require a presentation from employee 
+	after event completion, and before reimbursement
+	- passing grade is needed for reimbursement
+	- grades/presentations are only viewable by approvers/requesters (dsuper, dhead, BenCo)
+
+Process of approval:
+	1) employee gathers information 
+	2) employee submits tuition reimbursement form
+		a) request is marked urgent if event is < 2 weeks from starting
+	3) employee gets approval email from direct super
+		a) i) denies request, submits why
+		   ii) approves request
+		   iii) solicits for more information
+		   iv) dsuper does nothing, request goes on to Benefits Coordinator
+		b) if ds == dept head, approval is skipped
+	4) employee gets approval from department head
+		a) dhead can ask for info from emp, or dsuper
+		b) approves request
+		c) do nothing and request auto approves 
+		
+	5) employee gets approval from BenCo
+		a) BenCo may
+			i) ask for more info from employee, dsuper, or dhead
+			ii) adjust dispersement amount:
+				- any adjustment will notify employee and give opportunity to cancel request
+			ii) may approve the tuition reimbursement request which can adjust amount dispersed (can exceed employee's $$ limit)
+				- if amount dispersed is higher, BenCo must provide reason, and reimbursement is marked as exceeding
+			iii) do nothing, escalation email should be sent to BenCo's super
+	6 ) grade / presentation upload
+		1) BenCo must confirm that grade was passing
+		2) direct super presents grade/presentation to dsuper, dhead, and BenCo
+	
+	
+	
+	
+	BRAINSTOOOOOOOOOOOOOOOOORming
+	What tables would you incluye?
+		- employees: name, id
+		

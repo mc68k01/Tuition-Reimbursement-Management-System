@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <!-- Any attributes here apply to the actual SQL Table. If you don't include
+     them, then the name will be assumed based on the field name in the Class. -->
+    <class name="models.employee" table="employees">
+        <!-- 'name' attribute corresponds to the Java class name or field name.
+        'type' attribute will let Hibernate know what to convert the SQL type
+        into for Java. 'column' is to specify a column name in the SQL Table. -->
+
+        <!-- id tag is for your Primary Key -->
+        <id name="empId" type="int" column="emp_id">
+            <generator class="identity" />
+        </id>
+
+        <property name="name" type="string" column="emp_id"/>
+        <property name="deptId" type="int" column="dept_id"/>
+
+    </class>
+
+</hibernate-mapping>

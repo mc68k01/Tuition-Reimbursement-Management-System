@@ -1,0 +1,1275 @@
+<!doctype html>
+<html lang="en" >
+  <head >
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>Dashboard Template · Bootstrap v5.1</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/dashboard/">
+
+    
+
+    <!-- Bootstrap core CSS -->
+<link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;    
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link href="dashboard.css" rel="stylesheet">
+
+  </head>
+  <body onload=loadRequestsById()>
+<script>
+    if(document.readyState === 'complete') {
+      loadRequests();
+      console.log("Why is NOTHING happening?");
+  }
+</script>
+    <!-- <div onload=loadReimbursementForm()></div> -->
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">EmployeeSoft</a>
+  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+  <div class="navbar-nav">
+    <div class="nav-item text-nowrap">
+      <a class="nav-link px-3" href="#">Sign out</a>
+    </div>
+  </div>
+</header>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">
+              <span data-feather="home"></span>
+              Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" onclick = loadEmployees()>
+              <span data-feather="file"></span>
+              Explore Employee Benefits
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" onclick=loadRequests()>
+              <span data-feather="shopping-cart"></span>
+              Timesheets
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" onclick=loadSuper()>
+              <span data-feather="users"></span>
+              Load Direct Supervisor's Requests
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" onclick = loadDhead()>
+              <span data-feather="bar-chart-2" ></span>
+              Load Department Head Requests
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" onclick=loadBenCo()>
+              <span data-feather="layers"></span>
+              Load Benefits Coordinator's Requests
+            </a>
+          </li>
+        </ul>
+
+        </ul>
+      </div>
+    </nav>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Dashboard</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+          <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+          </div>
+          <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+            <span data-feather="calendar"></span>
+            This week
+          </button>
+        </div>
+      </div>
+      <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+
+      <!-- <button onclick = loadDhead()>Load Department Head Requests</button> -->
+    
+      <table style ="border: 2px solid black" id="myTable">
+        <tbody id="myTBody">
+        <thead>
+        <tr style="text-align:left;">
+            
+        </tr>
+        <tr>
+          <th>Form ID: </th>
+          <th>Request Status</th>
+          <th>Employee ID: </th>
+          <th>Employee Name: </th>
+          <th>Employee Dept: </th>
+          <th>Employee Super: </th>
+          <th>Reason for Request: </th>
+          <th>Requested Amount: </th>
+          <th>Time Missed: </th>
+          <th>Pre-Approved: </th>
+          <th>Event Date: </th>
+          <th>Event Location: </th>
+          <th>Date Escalated: </th>
+          <th>Grading Format: </th>
+          <th>Grading Attachments: </th>
+          <th>Event Description: </th>
+          <th>Event Type: </th>
+        </tr>
+        <tr>
+        </tr>
+    </thead>
+    </tbody>
+    </table>
+    
+    <label for="requesterIdInput">Employee ID: </label>
+    <input type = "number" id="requesterIdInput"><br>
+
+    <label for="requesterNameInput">Employee Name: </label>
+    <input type = "text" id="requesterNameInput"><br>
+
+    <label for="requesterDeptInput">Employee Dept: </label>
+    <input type = "text" id="requesterDeptInput"><br>
+
+    <label for="requesterSuperInput">Employee Super: </label>
+    <input type = "number" id="requesterSuperInput"><br>
+
+    <label for="reasonForRequestInput">Reason for Request: </label>
+    <input type = "text" id="reasonForRequestInput"><br>
+
+    <label for="amountRequestedInput">Requested Amount: </label>
+    <input type = "text" id="amountRequestedInput"><br>
+
+    <label for="timeMissedFromWorkInput">Time Missed: </label>
+    <input type = "text" id="timeMissedFromWorkInput"><br>
+
+    <label for="preApprovedInput">Pre-Approved (boolean): </label>
+    <input type = "text" id="preApprovedInput"><br>
+
+    <label for="eventDateInput">Event Date: </label>
+    <input type = "text" id="eventDateInput"><br>
+
+    <label for="eventLocationInput">Event Location: </label>
+    <input type = "text" id="eventLocationInput"><br>
+
+    <label for="dateEscalatedInput">Date Escalated: </label>
+    <input type = "text" id="dateEscalatedInput"><br>
+
+    <label for="gradingFormatInput">Grading Format: </label>
+    <input type = "text" id="gradingFormatInput"><br>
+    
+    <label for="eventAttachmentsInput">Event Attachments via URL: </label>
+    <input type = "text" id="eventAttachmentsInput"><br>
+    
+    <label for="eventDescriptionInput">Event Description: </label>
+    <input type = "text" id="eventDescriptionInput"><br>
+    
+    <label for="eventTypeInput">Event Type(1-6): </label>
+    <input type = "text" id="eventTypeInput"><br>
+    
+    <button onclick="submitReimbursementForm()">Submit New Request</button>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    </main>
+  </div>
+</div>
+    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+
+      <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
+       <!-- Display the dashboard.js for super, dheads, bencos --> 
+      <script src="dashboard.js"></script>
+
+      <script>
+
+        async function loadEmployees() {
+          // remove the existing requests table from the page
+          var tableHeaderRowCount = 1;
+          var table = document.getElementById('myTable');
+          var rowCount = table.rows.length;
+          for (var i = tableHeaderRowCount; i < rowCount; i++) {
+            table.deleteRow(tableHeaderRowCount);
+          }
+          row  = table.insertRow();
+          cell1 = row.insertCell(); // empId
+          cell2 = row.insertCell(); // empName
+          cell3 = row.insertCell(); // empDeptId
+          cell4 = row.insertCell(); // empUsrName
+          cell5 = row.insertCell(); // empSuperId
+          cell6 = row.insertCell(); // empBenco
+          cell1.innerHTML = "Employee ID ";
+          cell2.innerHTML = "Employee Name: ";
+          cell3.innerHTML = "Employee Dept ID: ";
+          cell4.innerHTML = "Employee Username: ";
+          cell5.innerHTML = "Employee Super ID: "
+          cell6.innerHTML = "Benefits Coordinator: ";
+
+          const url = 'http://localhost:7000/employees';
+          httpResponse = await fetch(url);
+          body = await httpResponse.json();
+          console.log(body);
+
+          for(i=0; i<body.length; i++){
+              let table = document.getElementById("myTBody");
+              row  = table.insertRow();
+              cell1 = row.insertCell(); // empId
+              cell2 = row.insertCell(); // empName
+              cell3 = row.insertCell(); // empDeptId
+              cell4 = row.insertCell(); // empUsrName
+              cell5 = row.insertCell(); // empSuperId
+              cell6 = row.insertCell(); // empBenco
+              
+              cell1.innerHTML = body[i].empId;
+              cell2.innerHTML = body[i].empName;
+              cell3.innerHTML = body[i].empDeptId;
+              cell4.innerHTML = body[i].empUsrName;
+              cell5.innerHTML = body[i].empSuperId;
+              cell6.innerHTML = body[i].empBenCo;
+
+
+          }
+        }
+///        http://localhost:7000/requests/emp/1
+    async function loadRequestsById() {
+          var currentUser = localStorage.getItem('username');
+            // get all employees, find the matching ID by user
+          const getEmployeeByUserURL = "http://localhost:7000/employeebyuser/" + currentUser;
+          httpResponseEmpByUserURL = await fetch(getEmployeeByUserURL);
+          employeeByUserJSON = await httpResponseEmpByUserURL.json();
+          console.log(employeeByUserJSON);
+          if(employeeByUserJSON.empBenCo==true) {loadBenCo();} // if user is a BenCo, load BenCo 
+
+          // if (head_id == employeeByUserJSON.empId) {loadDhead();} // if user is in Dhead, load the Dhead approval requests
+
+          const getDeptHeadsURL = "http://localhost:7000/deptheads/";
+          responseDeptHeads = await fetch(getDeptHeadsURL);
+          deptHeadsJSON = await responseDeptHeads.json();
+          console.log(deptHeadsJSON);
+          for (i = 0; i < deptHeadsJSON.length; i++) {
+            if (deptHeadsJSON[i].head_id == employeeByUserJSON.empId) {loadDhead();}
+          } // test case Armistice is head of Dept 5 
+                    
+
+          const url = 'http://localhost:7000/employees';
+          httpResponse = await fetch(url);
+          employeesBody = await httpResponse.json();
+          console.log(employeesBody);
+          // var match = false;
+          // var empIdMatched = 0;
+          //console.log(currentUser);
+          for(i=0; i<employeesBody.length; i++){
+            if(employeesBody[i].empSuperId == employeeByUserJSON.empId){
+          //     match = true;
+          //     empIdMatched = employeesBody[i].empId;
+              console.log("Match found");
+              loadSuper(employeeByUserJSON.empId);
+            }
+          }
+          // if (match) {console.log(empIdMatched);}
+          
+          
+          // get the table of employees, check user's Id with empSuperId column, return list  of empSuperId == currentUserId
+
+    }
+
+    async function loadRequests() {           
+        // remove the existing requests table from the page
+        var tableHeaderRowCount = 2;
+        var table = document.getElementById('myTable');
+        var rowCount = table.rows.length;
+        for (var i = tableHeaderRowCount; i < rowCount; i++) {
+            table.deleteRow(tableHeaderRowCount);
+          }
+        //document.getElementById("myTable").detach();
+            url4 = "http://localhost:7000/requests";
+            httpResponse = await fetch(url4);
+            body = await httpResponse.json();
+    
+            // tableElement.innerHTML = "";
+            //let requestx = document.createElement('tr');
+    
+            // console.log(body);
+            // console.log(body[0].amountRequested);
+            // console.log(body[1].amountRequested);
+            // console.log(body[2].amountRequested);
+            // console.log(body[0]);
+    
+            for(i=0; i<body.length; i++){
+              let tableElement = document.getElementById("myTBody");
+              row  = tableElement.insertRow();
+              cell1 = row.insertCell(); // formid
+              cell2 = row.insertCell(); // request_status
+              cell3 = row.insertCell(); // employee id
+              cell4 = row.insertCell(); // employee name
+              cell5 = row.insertCell(); // employee dept
+              cell6 = row.insertCell(); // super
+              cell7 = row.insertCell(); // reason for request
+              cell8 = row.insertCell(); // requested amount
+              cell9 = row.insertCell(); // time missed
+              cell10 = row.insertCell(); // pre approved
+              cell11 = row.insertCell(); // event date
+              cell12 = row.insertCell(); // event location
+              cell13 = row.insertCell(); // dateEscalated
+              cell14 = row.insertCell(); // grading format
+              cell15 = row.insertCell(); // eventAttachments
+              cell16 = row.insertCell(); // eventDescription
+              cell17 = row.insertCell(); // eventType
+              // for(j=0; j<body[i].length; j++){
+                // console.log(body[i].amountRequested)
+            // for (key var in body) {
+    
+            // let amountRequested = document.createElement('td');
+            // amountRequested.innerHTML = body[i].amountRequested;
+            // requestx.appendChild(amountRequested);
+            // console.log(amountRequested);
+    
+            //let dateEscalated = document.createElement('td');
+            //let cell = rquestx.insertCell();
+            //let text = document.createTextNode(element[key]);
+            cell1.innerHTML = body[i].formId;
+            
+            if (body[i].preApproved == true) {
+              cell2.innerHTML = 8;
+              const data = {
+              formId : body[i].formId,
+              requestStatus : 8,
+              requesterId : body[i].requesterId,
+              requesterName : body[i].requesterName,
+              requesterDept : body[i].requesterDept,
+              requesterSuper : body[i].requesterSuper,
+              reasonForRequest : body[i].reasonForRequest,
+              amountRequested : body[i].amountRequested,
+              timeMissedFromWork : body[i].timeMissedFromWork,
+              preApproved : body[i].preApproved,
+              eventDate : body[i].eventDate,
+              eventLocation : body[i].eventLocation,
+              dateEscalated : body[i].dateEscalated,
+              gradingFormatId : body[i].gradingFormatId,
+              eventAttachments : body[i].eventAttachments,
+              eventDescription : body[i].eventDescription,
+              eventType : body[i].eventType
+              }
+              const url3 = "http://localhost:7000/requests/" + body[i].formId;
+              const httpResponse = await fetch(url3, {
+                headers: {
+                "Access-Control-Allow-Method": "PUT"                
+                },
+                mode:"cors",
+                credentials: "include",
+                method: "PUT",
+                body: JSON.stringify(data)
+            })
+            // console.log(httpResponse);
+            }
+            else {cell2.innerHTML = body[i].requestStatus;}
+            cell3.innerHTML = body[i].requesterId;
+            cell4.innerHTML = body[i].requesterName;
+            cell5.innerHTML = body[i].requesterDept;
+            cell6.innerHTML = body[i].requesterSuper;
+            cell7.innerHTML = body[i].reasonForRequest;
+            cell8.innerHTML = body[i].amountRequested;
+            cell9.innerHTML = body[i].timeMissedFromWork;
+            cell10.innerHTML = body[i].preApproved;
+                
+            let ms = Date.now();
+            
+            var eventDateConversion = new Date(body[i].eventDate);
+            cell11.innerHTML = eventDateConversion.toString();
+
+            // console.log(body[i].eventDate-ms);
+            if ((body[i].eventDate)-ms<= 86400000){                                      
+              urgentMsg = document.createTextNode("-URGENT");
+              cell11.appendChild(urgentMsg);
+            } 
+
+            cell12.innerHTML = body[i].eventLocation;
+
+            var dateEscalatedConversion = new Date(body[i].dateEscalated);
+            cell13.innerHTML = dateEscalatedConversion.toString();
+
+            //cell13.innerHTML = body[i].dateEscalated;
+
+            cell14.innerHTML = body[i].gradingFormat;
+            cell15.innerHTML = body[i].eventAttachments;
+            cell16.innerHTML = body[i].eventDescription;
+            cell17.innerHTML = body[i].eventType;
+  
+            row2 = tableElement.insertRow();
+            
+               cell20 = row2.insertCell(); // request_status
+               cell21 = row2.insertCell(); // employee id
+               cell22 = row2.insertCell(); // employee name
+
+               
+            // button = document.createElement('button');
+            // button.innerHTML = "Approve Request";
+
+            button = document.createElement('button');
+            cell20.innerHTML = '<button id="button";>Approve Request</button>';
+
+            button1 = document.createElement('button');
+            cell21.innerHTML = '<button id="button1";>Ask for More Information</button>';
+
+            // DENIAL BUTTON
+            formId = body[i].formId;
+            // console.log(formId);
+
+            denialButton = document.createElement('button');
+
+            const data = {
+              formId : body[i].formId,
+              requestStatus : body[i].requestStatus,
+              requesterId : body[i].requesterId,
+              requesterName : body[i].requesterName,
+              requesterDept : body[i].requesterDept,
+              requesterSuper : body[i].requesterSuper,
+              reasonForRequest : body[i].reasonForRequest,
+              amountRequested : body[i].amountRequested,
+              timeMissedFromWork : body[i].timeMissedFromWork,
+              preApproved : body[i].preApproved,
+              eventDate : body[i].eventDate,
+              eventLocation : body[i].eventLocation,
+              dateEscalated : body[i].dateEscalated,
+              gradingFormatId : body[i].gradingFormatId,
+             eventAttachments : body[i].eventAttachments,
+            eventDescription : body[i].eventDescription,
+            eventType : body[i].eventType
+            }
+    
+            cell22.innerHTML = '<button id="denialButton";>Deny Request</button>';
+
+            const url3 = "http://localhost:7000/requests/" + body[i].formId;
+            // const url3 = "http://localhost:7000/updaterequestbyget/" + body[i].formId;
+
+
+            // Approval button click
+            document.getElementById("button").onclick =  async function(data, url3) {
+              approve(approveData, url3);
+              // if currentUserId 
+            };
+
+
+            document.getElementById("denialButton").onclick =  async function(data, url3) {
+              whyDeny(formId, url3);
+            };
+
+            row2.appendChild(button);
+            }
+          }
+      
+
+      async function loadDhead(){
+        // remove the existing requests table from the page
+        var tableHeaderRowCount = 2;
+        var table = document.getElementById('myTable');
+        var rowCount = table.rows.length;
+        for (var i = tableHeaderRowCount; i < rowCount; i++) {
+            table.deleteRow(tableHeaderRowCount);
+          }
+        //document.getElementById("myTable").detach();
+        console.log("dhead button clicked");
+        url4 = "http://localhost:7000/requests/status/5";
+            httpResponse = await fetch(url4);
+            body = await httpResponse.json();
+            console.log(body);
+            for(i=0; i<body.length; i++){
+              let tableElement = document.getElementById("myTBody");
+              row  = tableElement.insertRow();
+              cell1 = row.insertCell(); // formid
+              cell2 = row.insertCell(); // request_status
+              cell3 = row.insertCell(); // employee id
+              cell4 = row.insertCell(); // employee name
+              cell5 = row.insertCell(); // employee dept
+              cell6 = row.insertCell(); // super
+              cell7 = row.insertCell(); // reason for request
+              cell8 = row.insertCell(); // requested amount
+              cell9 = row.insertCell(); // time missed
+              cell10 = row.insertCell(); // pre approved
+              cell11 = row.insertCell(); // event date
+              cell12 = row.insertCell(); // event location
+              cell13 = row.insertCell(); // dateEscalated
+              cell14 = row.insertCell(); // grading format
+              cell15 = row.insertCell(); // eventAttachments
+              cell16 = row.insertCell(); // eventDescription
+              cell17 = row.insertCell(); // eventType
+
+            cell1.innerHTML = body[i].formId;
+            
+            if (body[i].preApproved == true) {
+              cell2.innerHTML = 8;
+              const data = {
+              formId : body[i].formId,
+              requestStatus : 8,
+              requesterId : body[i].requesterId,
+              requesterName : body[i].requesterName,
+              requesterDept : body[i].requesterDept,
+              requesterSuper : body[i].requesterSuper,
+              reasonForRequest : body[i].reasonForRequest,
+              amountRequested : body[i].amountRequested,
+              timeMissedFromWork : body[i].timeMissedFromWork,
+              preApproved : body[i].preApproved,
+              eventDate : body[i].eventDate,
+              eventLocation : body[i].eventLocation,
+              dateEscalated : body[i].dateEscalated,
+              gradingFormatId : body[i].gradingFormatId,
+              eventAttachments : body[i].eventAttachments,
+              eventDescription : body[i].eventDescription,
+              eventType : body[i].eventType
+              }
+              const url3 = "http://localhost:7000/requests/" + body[i].formId;
+              const httpResponse = await fetch(url3, {
+                headers: {
+                "Access-Control-Allow-Method": "PUT"                
+                },
+                mode:"cors",
+                credentials: "include",
+                method: "PUT",
+                body: JSON.stringify(data)
+            })
+            console.log(httpResponse);
+            }
+            else {cell2.innerHTML = body[i].requestStatus;}
+            cell3.innerHTML = body[i].requesterId;
+            cell4.innerHTML = body[i].requesterName;
+            cell5.innerHTML = body[i].requesterDept;
+            cell6.innerHTML = body[i].requesterSuper;
+            cell7.innerHTML = body[i].reasonForRequest;
+            cell8.innerHTML = body[i].amountRequested;
+            cell9.innerHTML = body[i].timeMissedFromWork;
+            cell10.innerHTML = body[i].preApproved;
+                
+            let ms = Date.now();
+            
+            var eventDateConversion = new Date(body[i].eventDate);
+            cell11.innerHTML = eventDateConversion.toString();
+
+            console.log(body[i].eventDate-ms);
+            if ((body[i].eventDate)-ms<= 86400000){                                      
+              urgentMsg = document.createTextNode("-URGENT");
+              cell11.appendChild(urgentMsg);
+            } 
+
+            cell12.innerHTML = body[i].eventLocation;
+
+            var dateEscalatedConversion = new Date(body[i].dateEscalated);
+            cell13.innerHTML = dateEscalatedConversion.toString();
+
+            //cell13.innerHTML = body[i].dateEscalated;
+
+            cell14.innerHTML = body[i].gradingFormat;
+            cell15.innerHTML = body[i].eventAttachments;
+            cell16.innerHTML = body[i].eventDescription;
+            cell17.innerHTML = body[i].eventType;
+  
+            row2 = tableElement.insertRow();
+            
+               cell20 = row2.insertCell(); // request_status
+               cell21 = row2.insertCell(); // employee id
+               cell22 = row2.insertCell(); // employee name
+
+               
+            // button = document.createElement('button');
+            // button.innerHTML = "Approve Request";
+
+            button = document.createElement('button');
+            cell20.innerHTML = '<button id="button";>Approve Request</button>';
+
+            button1 = document.createElement('button');
+            cell21.innerHTML = '<button id="button1";>Ask for More Information</button>';
+
+            // DENIAL BUTTON
+            formId = body[i].formId;
+            console.log(formId);
+
+            denialButton = document.createElement('button');
+            cell22.innerHTML = '<button id="denialButton";>Deny Request</button>';
+
+            const approveData = {
+              formId : body[i].formId,
+              requestStatus : 5,
+              requesterId : body[i].requesterId,
+              requesterName : body[i].requesterName,
+              requesterDept : body[i].requesterDept,
+              requesterSuper : body[i].requesterSuper,
+              reasonForRequest : body[i].reasonForRequest,
+              amountRequested : body[i].amountRequested,
+              timeMissedFromWork : body[i].timeMissedFromWork,
+              preApproved : body[i].preApproved,
+              eventDate : body[i].eventDate,
+              eventLocation : body[i].eventLocation,
+              dateEscalated : body[i].dateEscalated,
+              gradingFormatId : body[i].gradingFormatId,
+              eventAttachments : body[i].eventAttachments,
+              eventDescription : body[i].eventDescription,
+              eventType : body[i].eventType
+
+            }
+            const denyData = {
+              formId : body[i].formId,
+              requestStatus : 3,
+              requesterId : body[i].requesterId,
+              requesterName : body[i].requesterName,
+              requesterDept : body[i].requesterDept,
+              requesterSuper : body[i].requesterSuper,
+              reasonForRequest : body[i].reasonForRequest,
+              amountRequested : body[i].amountRequested,
+              timeMissedFromWork : body[i].timeMissedFromWork,
+              preApproved : body[i].preApproved,
+              eventDate : body[i].eventDate,
+              eventLocation : body[i].eventLocation,
+              dateEscalated : body[i].dateEscalated,
+              gradingFormatId : body[i].gradingFormatId,
+             eventAttachments : body[i].eventAttachments,
+            eventDescription : body[i].eventDescription,
+            eventType : body[i].eventType
+            }
+
+    
+            cell22.innerHTML = '<button id="denialButton";>Deny Request</button>';
+
+            const url3 = "http://localhost:7000/requests/" + body[i].formId;
+            // const url3 = "http://localhost:7000/updaterequestbyget/" + body[i].formId;
+
+
+            // Approval button click
+            document.getElementById("button").onclick =  async function(data, url3) {
+              approve(approveData, url3);
+              // if currentUserId 
+            };
+
+
+            document.getElementById("denialButton").onclick =  async function(data, url3) {
+              whyDeny(formId, url3);
+            };
+
+            row2.appendChild(button);
+            }
+          }
+
+      async function loadBenCo(){      
+        var tableHeaderRowCount = 2;
+        var table = document.getElementById('myTable');
+        var rowCount = table.rows.length;
+        for (var i = tableHeaderRowCount; i < rowCount; i++) {
+            table.deleteRow(tableHeaderRowCount);
+          }
+        //document.getElementById("myTable").detach();
+        console.log("dhead button clicked");
+        url4 = "http://localhost:7000/requests/status/8";
+            httpResponse = await fetch(url4);
+            body = await httpResponse.json();
+            console.log(body);
+            for(i=0; i<body.length; i++){
+              let tableElement = document.getElementById("myTBody");
+              row  = tableElement.insertRow();
+              cell1 = row.insertCell(); // formid
+              cell2 = row.insertCell(); // request_status
+              cell3 = row.insertCell(); // employee id
+              cell4 = row.insertCell(); // employee name
+              cell5 = row.insertCell(); // employee dept
+              cell6 = row.insertCell(); // super
+              cell7 = row.insertCell(); // reason for request
+              cell8 = row.insertCell(); // requested amount
+              cell9 = row.insertCell(); // time missed
+              cell10 = row.insertCell(); // pre approved
+              cell11 = row.insertCell(); // event date
+              cell12 = row.insertCell(); // event location
+              cell13 = row.insertCell(); // dateEscalated
+              cell14 = row.insertCell(); // grading format
+              cell15 = row.insertCell(); // eventAttachments
+              cell16 = row.insertCell(); // eventDescription
+              cell17 = row.insertCell(); // eventType
+
+            cell1.innerHTML = body[i].formId;
+            
+            if (body[i].preApproved == true) {
+              cell2.innerHTML = 8;
+              const data = {
+              formId : body[i].formId,
+              requestStatus : 8,
+              requesterId : body[i].requesterId,
+              requesterName : body[i].requesterName,
+              requesterDept : body[i].requesterDept,
+              requesterSuper : body[i].requesterSuper,
+              reasonForRequest : body[i].reasonForRequest,
+              amountRequested : body[i].amountRequested,
+              timeMissedFromWork : body[i].timeMissedFromWork,
+              preApproved : body[i].preApproved,
+              eventDate : body[i].eventDate,
+              eventLocation : body[i].eventLocation,
+              dateEscalated : body[i].dateEscalated,
+              gradingFormatId : body[i].gradingFormatId,
+              eventAttachments : body[i].eventAttachments,
+              eventDescription : body[i].eventDescription,
+              eventType : body[i].eventType
+              }
+              const url3 = "http://localhost:7000/requests/" + body[i].formId;
+              const httpResponse = await fetch(url3, {
+                headers: {
+                "Access-Control-Allow-Method": "PUT"                
+                },
+                mode:"cors",
+                credentials: "include",
+                method: "PUT",
+                body: JSON.stringify(data)
+            })
+            console.log(httpResponse);
+            }
+            else {cell2.innerHTML = body[i].requestStatus;}
+            cell3.innerHTML = body[i].requesterId;
+            cell4.innerHTML = body[i].requesterName;
+            cell5.innerHTML = body[i].requesterDept;
+            cell6.innerHTML = body[i].requesterSuper;
+            cell7.innerHTML = body[i].reasonForRequest;
+            cell8.innerHTML = body[i].amountRequested;
+            cell9.innerHTML = body[i].timeMissedFromWork;
+            cell10.innerHTML = body[i].preApproved;
+                
+            let ms = Date.now();
+            
+            var eventDateConversion = new Date(body[i].eventDate);
+            cell11.innerHTML = eventDateConversion.toString();
+
+            console.log(body[i].eventDate-ms);
+            if ((body[i].eventDate)-ms<= 86400000){                                      
+              urgentMsg = document.createTextNode("-URGENT");
+              cell11.appendChild(urgentMsg);
+            } 
+
+            cell12.innerHTML = body[i].eventLocation;
+
+            var dateEscalatedConversion = new Date(body[i].dateEscalated);
+            cell13.innerHTML = dateEscalatedConversion.toString();
+
+            //cell13.innerHTML = body[i].dateEscalated;
+
+            cell14.innerHTML = body[i].gradingFormat;
+            cell15.innerHTML = body[i].eventAttachments;
+            cell16.innerHTML = body[i].eventDescription;
+            cell17.innerHTML = body[i].eventType;
+  
+            row2 = tableElement.insertRow();
+            
+               cell20 = row2.insertCell(); // request_status
+               cell21 = row2.insertCell(); // employee id
+               cell22 = row2.insertCell(); // employee name
+                cell23 = row2.insertCell(); 
+               
+            // button = document.createElement('button');
+            // button.innerHTML = "Approve Request";
+
+            // APPROVAL BUTTON ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            button = document.createElement('button');
+            cell20.innerHTML = '<button id="button";>Approve Request</button>';
+
+            // INFO BUTTON ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            button1 = document.createElement('button');
+            cell21.innerHTML = '<button id="button1";>Ask for More Information</button>';
+
+            // DENIAL BUTTON ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            formId = body[i].formId;
+            denialButton = document.createElement('button');
+            cell22.innerHTML = '<button id="denialButton";>Deny Request</button>';
+
+            button3 = document.createElement('button');
+            cell23.innerHTML = '<button onclick="adjustReimbursement(formId)" id="button3";>Modify Reimbursement</button>';
+
+            const approveData = {
+              formId : body[i].formId,
+              requestStatus : 5,
+              requesterId : body[i].requesterId,
+              requesterName : body[i].requesterName,
+              requesterDept : body[i].requesterDept,
+              requesterSuper : body[i].requesterSuper,
+              reasonForRequest : body[i].reasonForRequest,
+              amountRequested : body[i].amountRequested,
+              timeMissedFromWork : body[i].timeMissedFromWork,
+              preApproved : body[i].preApproved,
+              eventDate : body[i].eventDate,
+              eventLocation : body[i].eventLocation,
+              dateEscalated : body[i].dateEscalated,
+              gradingFormatId : body[i].gradingFormatId,
+              eventAttachments : body[i].eventAttachments,
+              eventDescription : body[i].eventDescription,
+              eventType : body[i].eventType
+
+            }
+            const denyData = {
+              formId : body[i].formId,
+              requestStatus : 3,
+              requesterId : body[i].requesterId,
+              requesterName : body[i].requesterName,
+              requesterDept : body[i].requesterDept,
+              requesterSuper : body[i].requesterSuper,
+              reasonForRequest : body[i].reasonForRequest,
+              amountRequested : body[i].amountRequested,
+              timeMissedFromWork : body[i].timeMissedFromWork,
+              preApproved : body[i].preApproved,
+              eventDate : body[i].eventDate,
+              eventLocation : body[i].eventLocation,
+              dateEscalated : body[i].dateEscalated,
+              gradingFormatId : body[i].gradingFormatId,
+             eventAttachments : body[i].eventAttachments,
+            eventDescription : body[i].eventDescription,
+            eventType : body[i].eventType
+            }
+
+    
+            cell22.innerHTML = '<button id="denialButton";>Deny Request</button>';
+
+            const url3 = "http://localhost:7000/requests/" + body[i].formId;
+            // const url3 = "http://localhost:7000/updaterequestbyget/" + body[i].formId;
+
+
+            // Approval button click
+            document.getElementById("button").onclick =  async function(data, url3) {
+              approve(approveData, url3);
+              // if currentUserId 
+            };
+
+
+            document.getElementById("denialButton").onclick =  async function(data, url3) {
+              whyDeny(formId, url3);
+            };
+
+            row2.appendChild(button);
+            }
+          }
+
+      async function loadSuper(empId){
+
+        // removes the old table from the screen
+        var tableHeaderRowCount = 2;
+        var table = document.getElementById('myTable');
+        var rowCount = table.rows.length;
+        for (var i = tableHeaderRowCount; i < rowCount; i++) {
+            table.deleteRow(tableHeaderRowCount);
+          }
+        url4 = "http://localhost:7000/requests/super/2"; // retrieves requests with status of 2 (awaiting super approval)
+            httpResponse = await fetch(url4);
+            body = await httpResponse.json();
+            console.log(body);
+            for(i=0; i<body.length; i++){
+              let tableElement = document.getElementById("myTBody");
+              row  = tableElement.insertRow();
+              cell1 = row.insertCell(); // formid
+              cell2 = row.insertCell(); // request_status
+              cell3 = row.insertCell(); // employee id
+              cell4 = row.insertCell(); // employee name
+              cell5 = row.insertCell(); // employee dept
+              cell6 = row.insertCell(); // super
+              cell7 = row.insertCell(); // reason for request
+              cell8 = row.insertCell(); // requested amount
+              cell9 = row.insertCell(); // time missed
+              cell10 = row.insertCell(); // pre approved
+              cell11 = row.insertCell(); // event date
+              cell12 = row.insertCell(); // event location
+              cell13 = row.insertCell(); // dateEscalated
+              cell14 = row.insertCell(); // grading format
+              cell15 = row.insertCell(); // eventAttachments
+              cell16 = row.insertCell(); // eventDescription
+              cell17 = row.insertCell(); // eventType
+
+            cell1.innerHTML = body[i].formId;
+            
+            if (body[i].preApproved == true) { // if pre-approved bump to status 8 for BenCo ///////////////////////////
+              cell2.innerHTML = 8;
+              const data = {
+              formId : body[i].formId,
+              requestStatus : 8,
+              requesterId : body[i].requesterId,
+              requesterName : body[i].requesterName,
+              requesterDept : body[i].requesterDept,
+              requesterSuper : body[i].requesterSuper,
+              reasonForRequest : body[i].reasonForRequest,
+              amountRequested : body[i].amountRequested,
+              timeMissedFromWork : body[i].timeMissedFromWork,
+              preApproved : body[i].preApproved,
+              eventDate : body[i].eventDate,
+              eventLocation : body[i].eventLocation,
+              dateEscalated : body[i].dateEscalated,
+              gradingFormatId : body[i].gradingFormatId,
+              eventAttachments : body[i].eventAttachments,
+              eventDescription : body[i].eventDescription,
+              eventType : body[i].eventType
+              }
+              const url3 = "http://localhost:7000/requests/" + body[i].formId;
+              const httpResponse = await fetch(url3, {
+                headers: {
+                "Access-Control-Allow-Method": "PUT"                
+                },
+                mode:"cors",
+                credentials: "include",
+                method: "PUT",
+                body: JSON.stringify(data)
+            })///////////////////////////   update query ////////////////////////////////////
+            console.log(httpResponse);
+            }
+            else {cell2.innerHTML = body[i].requestStatus;}
+            cell3.innerHTML = body[i].requesterId;
+            cell4.innerHTML = body[i].requesterName;
+            cell5.innerHTML = body[i].requesterDept;
+            cell6.innerHTML = body[i].requesterSuper;
+            cell7.innerHTML = body[i].reasonForRequest;
+            cell8.innerHTML = body[i].amountRequested;
+            cell9.innerHTML = body[i].timeMissedFromWork;
+            cell10.innerHTML = body[i].preApproved;
+                
+            let ms = Date.now(); ////////////////////////////////////  Is event urgent?  ////////////////////////////////////
+            
+            var eventDateConversion = new Date(body[i].eventDate);
+            cell11.innerHTML = eventDateConversion.toString();
+
+            console.log(body[i].eventDate-ms);
+            if ((body[i].eventDate)-ms<= 86400000){                                      
+              urgentMsg = document.createTextNode("-URGENT");
+              cell11.appendChild(urgentMsg);
+            } 
+
+            cell12.innerHTML = body[i].eventLocation;
+
+            var dateEscalatedConversion = new Date(body[i].dateEscalated);
+            cell13.innerHTML = dateEscalatedConversion.toString();
+
+            //cell13.innerHTML = body[i].dateEscalated; ///////////////////////////////////////////////////////////////
+
+            cell14.innerHTML = body[i].gradingFormat;
+            cell15.innerHTML = body[i].eventAttachments;
+            cell16.innerHTML = body[i].eventDescription;
+            cell17.innerHTML = body[i].eventType;
+  
+            row2 = tableElement.insertRow(); ///////////////////////////ADD A ROW FOR APPROVAL BUTTONS ///////////////////////////
+            
+               cell20 = row2.insertCell(); // approve request button
+               cell21 = row2.insertCell(); // ask for more info button
+               cell22 = row2.insertCell(); // deny request button
+
+               
+            // button = document.createElement('button');
+            // button.innerHTML = "Approve Request";
+
+            // APPROVAL BUTTON ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            button = document.createElement('button');
+            cell20.innerHTML = '<button id="button";>Approve Request</button>';
+
+            // INFO BUTTON ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            button1 = document.createElement('button');
+            cell21.innerHTML = '<button id="button1";>Ask for More Information</button>';
+
+            // DENIAL BUTTON ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            formId = body[i].formId;
+            denialButton = document.createElement('button');
+
+            const approveData = {
+              formId : body[i].formId,
+              requestStatus : 5,
+              requesterId : body[i].requesterId,
+              requesterName : body[i].requesterName,
+              requesterDept : body[i].requesterDept,
+              requesterSuper : body[i].requesterSuper,
+              reasonForRequest : body[i].reasonForRequest,
+              amountRequested : body[i].amountRequested,
+              timeMissedFromWork : body[i].timeMissedFromWork,
+              preApproved : body[i].preApproved,
+              eventDate : body[i].eventDate,
+              eventLocation : body[i].eventLocation,
+              dateEscalated : body[i].dateEscalated,
+              gradingFormatId : body[i].gradingFormatId,
+              eventAttachments : body[i].eventAttachments,
+              eventDescription : body[i].eventDescription,
+              eventType : body[i].eventType
+
+            }
+            const denyData = {
+              formId : body[i].formId,
+              requestStatus : 3,
+              requesterId : body[i].requesterId,
+              requesterName : body[i].requesterName,
+              requesterDept : body[i].requesterDept,
+              requesterSuper : body[i].requesterSuper,
+              reasonForRequest : body[i].reasonForRequest,
+              amountRequested : body[i].amountRequested,
+              timeMissedFromWork : body[i].timeMissedFromWork,
+              preApproved : body[i].preApproved,
+              eventDate : body[i].eventDate,
+              eventLocation : body[i].eventLocation,
+              dateEscalated : body[i].dateEscalated,
+              gradingFormatId : body[i].gradingFormatId,
+             eventAttachments : body[i].eventAttachments,
+            eventDescription : body[i].eventDescription,
+            eventType : body[i].eventType
+            }
+
+    
+            cell22.innerHTML = '<button id="denialButton";>Deny Request</button>';
+
+            const url3 = "http://localhost:7000/requests/" + body[i].formId;
+            // const url3 = "http://localhost:7000/updaterequestbyget/" + body[i].formId;
+
+
+            // Approval button click
+            document.getElementById("button").onclick =  async function(data, url3) {
+              approve(approveData, url3);
+              // if currentUserId 
+            };
+
+
+            document.getElementById("denialButton").onclick =  async function(data, url3) {
+              whyDeny(formId, url3);
+            };
+
+            row2.appendChild(button);
+            }
+          }
+
+      async function submitReimbursementForm() {
+        
+              requesterIdValue = document.getElementById("requesterIdInput").value;
+              // document.getElementById("requesterIdInput").value="";
+    
+              requesterNameValue = document.getElementById("requesterNameInput").value;
+              // document.getElementById("requesterNameInput").value="";
+    
+              requesterDeptValue = document.getElementById("requesterDeptInput").value;
+              // document.getElementById("requesterDeptInput").value="";
+    
+              requesterSuperValue = document.getElementById("requesterSuperInput").value;
+              // document.getElementById("requesterSuperInput").value="";
+    
+              reasonForRequestValue = document.getElementById("reasonForRequestInput").value;
+              // document.getElementById("reasonForRequestInput").value="";
+    
+              amountRequestedValue = document.getElementById("amountRequestedInput").value;
+              // document.getElementById("amountRequestedInput").value="";
+    
+              timeMissedFromWorkValue = document.getElementById("timeMissedFromWorkInput").value;
+              // document.getElementById("timeMissedFromWorkInput").value="";
+    
+              preApprovedValue = document.getElementById("preApprovedInput").value;
+              // document.getElementById("preApprovedInput").value="";
+    
+              eventDateValue = document.getElementById("eventDateInput").value;
+              // document.getElementById("eventDateInput").value="";
+    
+              eventLocationValue = document.getElementById("eventLocationInput").value;
+              // document.getElementById("eventLocationInput").value="";
+    
+              dateEscalatedValue = document.getElementById("dateEscalatedInput").value;
+              // document.getElementById("dateEscalatedInput").value="";
+    
+              gradingFormatValue = document.getElementById("gradingFormatInput").value;
+              // document.getElementById("gradingFormatInput").value="";
+    
+              eventAttachmentsValue = document.getElementById("eventAttachmentsInput").value;
+              // document.getElementById("eventAttachmentsInput").value="";
+    
+              eventDescriptionValue = document.getElementById("eventDescriptionInput").value;
+              // document.getElementById("eventDescriptionInput").value="";
+    
+              eventTypeValue = document.getElementById("eventTypeInput").value;
+              // document.getElementById("eventTypeInput").value="";
+              // 1 week is 604800000 millseconds
+
+
+              // if event is less than 1 wk away
+              if (eventDateValue - Date.now() < 604800000) {
+                window.alert("WARNING: Requests submitted 1 Week Prior to Event Are Not Considered!");
+              }
+
+              // if pre-Approved
+              if (preApprovedValue == 'true') requestStatusValue = 8;
+              else requestStatusValue = 1;
+              var checkExists = await getEmployeeByID(requesterIdValue);
+              // check funds remaining
+              if (checkExists == true){ // check if employee exists to sum existing requests from, on true proceed                
+                var reimbursementAvailable = await getReimbursementBalance(requesterIdValue);
+                // console.log(reimbursementAvailable);
+                if ((reimbursementAvailable-amountRequestedValue)==0) {amountRequestedValue = 0; console.log(amountRequestedValue);}
+                else if ((reimbursementAvailable-amountRequestedValue)>0) {amountRequestedValue = reimbursementAvailable-amountRequestedValue; console.log(amountRequestedValue);}
+                else if ((reimbursementAvailable-amountRequestedValue)<0) {amountRequestedValue = reimbursementAvailable; console.log(amountRequestedValue);}
+              }
+
+              // prompt with projected reimbursement
+              var reimbursementRate = await getProjectedReimbursement(gradingFormatValue);
+              window.confirm("Your projected reimbursement: $" + (reimbursementRate*amountRequestedValue));
+              const data = {
+                requesterId : requesterIdValue,
+                requesterName : requesterNameValue,
+                requesterDept : requesterDeptValue,
+                requesterSuper : requesterSuperValue,
+                reasonForRequest : reasonForRequestValue,
+                amountRequested : amountRequestedValue,
+                timeMissedFromWork : timeMissedFromWorkValue,
+                preApproved : preApprovedValue,
+                eventDate : eventDateValue,
+                eventLocation : eventLocationValue,
+                requestStatus : requestStatusValue,
+                dateEscalated : dateEscalatedValue,
+                gradingFormatId : gradingFormatValue,
+                eventAttachments : eventAttachmentsValue,
+                eventDescription : eventDescriptionValue,
+                eventType : eventTypeValue
+              }
+              // console.log(JSON.stringify(data));
+
+              const url2 = "http://localhost:7000/requests/";
+    
+              const httpResponse = await fetch(url2, {
+                headers: {
+                  // "Access-Control-Allow-Origin":"*"
+                },
+                method: "POST",
+                // mode: "cors",
+                body: JSON.stringify(data)
+            });
+    
+            const body = await httpResponse.json();
+    
+            // console.log(body);
+            
+      }
+
+      async function getReimbursementBalance(empID){
+        const url = 'http://localhost:7000/requests/emp/'+ empID;
+        const httpResponse = await fetch(url, {
+            headers: {
+            },
+            method: "GET",
+            });
+        const body = await httpResponse.json();
+        var reimbursementAvailable = 1000;
+        //31556952000
+        var oneYear = 10;
+        var currentYear = 1635492306945;
+            if (Date.now()-(currentYear+oneYear)>=0){
+        for(i = 0; i<body.length ; i++){
+            reimbursementAvailable = reimbursementAvailable - body[i].amountRequested;
+        }
+        // console.log(reimbursementAvailable);
+        return reimbursementAvailable;
+        // get all requests by empID
+        // for each empID, total their balances and add it to the table
+
+        // in new request should call this function to check balance remaining
+        // a new request should check balance and adjust to amount remaining
+        }
+        else {
+          i = body.length+1;
+          currentYear+= oneYear;
+          for(i; i<body.length ; i++){
+            reimbursementAvailable = reimbursementAvailable - body[i].amountRequested;
+          }
+          return reimbursementAvailable;
+        }
+      }
+
+      async function getEmployeeByID(empID){
+        const url = 'http://localhost:7000/employees/'+ empID;
+        const httpResponse = await fetch(url, {
+                headers: {
+                },
+                method: "GET",
+            });
+            const body = await httpResponse.json();
+            if (httpResponse.status == 400) {return false;}
+            else {return true;}
+            console.log(body);
+            // if(body!= null) return true;  // if employee exists return true
+            // else return false;
+      }
+
+      async function getProjectedReimbursement(gradingFormatValue){
+        const url = 'http://localhost:7000/gradingsstructs/'+gradingFormatValue;
+        const httpResponse = await fetch(url, {
+                headers: {
+                },
+                method: "GET",
+            });
+            const body = await httpResponse.json();
+            return body.gradingCutoff;
+      }
+            
+
+            // <p id="requestRejected"></p>
+
+      async function whyDeny(formId, data) {
+        let text;
+        let reason = prompt("Please provide a reason for denying this request:", "");
+        // document.getElementById("requestRejected").innerHTML = text;
+
+        updateURL = "http://localhost:7000/requests/"+formId
+        const httpResponse = await fetch(updateURL, {
+                headers: {
+                "Access-Control-Allow-Method": "PUT"                
+                },
+                mode:"cors",
+                credentials: "include",
+                method: "PUT",
+                body: JSON.stringify(data)
+            })///////////////////////////   update query ////////////////////////////////////
+            console.log(httpResponse);
+      }
+
+      async function approve(approveData, updateURL){
+        // updateURL = "http://localhost:7000/requests/"+formId
+        const httpResponse = await fetch(updateURL, {
+                headers: {
+                "Access-Control-Allow-Method": "PUT"                
+                },
+                mode:"cors",
+                credentials: "include",
+                method: "PUT",
+                body: JSON.stringify(approveData)
+            })///////////////////////////   update query ////////////////////////////////////
+            console.log(httpResponse);
+            alert("Request Approved.")
+
+      }
+
+      async function adjustReimbursement(formId) {
+        let text;
+        let reason = prompt("Please provide a reason for exceeding available reimbursement for this request:", "");
+        const httpResponse = await fetch(url, {
+                headers: {
+                },
+                method: "PUT",
+            });
+            const body = await httpResponse.json();
+            
+      }
+  </script>
+
+</body>
+</html>
